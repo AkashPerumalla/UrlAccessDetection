@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Logger</title>
+    <script>
+        // Function to log access and load records automatically
+        async function logAccessAndLoadRecords() {
+            // Log access
+            await fetch('/api/access/log', { method: 'POST' });
+
+            // Fetch and display records
+            const response = await fetch('/api/access/records');
+            const records = await response.json();
+            const tableBody = document.getElementById('recordsTableBody');
+            tableBody.innerHTML = ''; // Clear the existing rows
+            records.forEach(record => {
+                const row = `<tr>
+                    <td>${record.accessTime}</td>
+                    <td>${record.value}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Trigger the function on page load
+        window.onload = logAccessAndLoadRecords;
+    </script>
+</head>
+<body>
+    <h1>Access Logger</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Access Time</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody id="recordsTableBody"></tbody>
+    </table>
+</body>
+</html>
